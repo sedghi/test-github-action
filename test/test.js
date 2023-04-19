@@ -20,7 +20,10 @@ function getTestDataInstance(url) {
   });
 }
 
-let dwc;
+let dwc = new DICOMwebClient.api.DICOMwebClient({
+  url: 'http://localhost:8008/dcm4chee-arc/aets/DCM4CHEE/rs',
+  retrieveRendered: false,
+});
 describe('dicomweb.api.DICOMwebClient', function() {
   //
   // Note: you can add the following for debugging tests locally
