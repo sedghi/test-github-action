@@ -20,44 +20,50 @@ function getTestDataInstance(url) {
   });
 }
 
-let dwc;
+let dwc = new DICOMwebClient.api.DICOMwebClient({
+  url: 'http://localhost:8008/dcm4chee-arc/aets/DCM4CHEE/rs',
+  retrieveRendered: false,
+});
 describe('dicomweb.api.DICOMwebClient', function() {
-  beforeAll(function(done) {
-    dwc = new DICOMwebClient.api.DICOMwebClient({
-      url: 'http://localhost:8008/dcm4chee-arc/aets/DCM4CHEE/rs',
-      retrieveRendered: false,
-    });
+  //
+  // Note: you can add the following for debugging tests locally
+  //
+  // beforeAll(function(done) {
+  //   dwc = new DICOMwebClient.api.DICOMwebClient({
+  //     url: 'http://localhost:8008/dcm4chee-arc/aets/DCM4CHEE/rs',
+  //     retrieveRendered: false,
+  //   });
 
-    // Repeatedly call the reject endpoint until all studies are deleted
-    const deleteStudies = async () => {
-      const studies = await dwc.searchForStudies();
-      console.log('studies', studies, 'studies.length', studies.length);
+  //   // Repeatedly call the reject endpoint until all studies are deleted
+  //   const deleteStudies = async () => {
+  //     const studies = await dwc.searchForStudies();
+  //     console.log('studies', studies, 'studies.length', studies.length);
 
-      if (studies.length === 0) {
-        console.log('All studies deleted');
-        done();
-        return;
-      }
+  //     if (studies.length === 0) {
+  //       console.log('All studies deleted');
+  //       done();
+  //       return;
+  //     }
 
-      const promises = studies.map(study => {
-        return fetch(
-          `http://localhost:8008/dcm4chee-arc/aets/DCM4CHEE/rs/studies/${
-            study['0020000D'].Value[0]
-          }/reject/113039^DCM`,
-          {
-            method: 'POST',
-          },
-        );
-      });
+  //     const promises = studies.map(study => {
+  //       return fetch(
+  //         `http://localhost:8008/dcm4chee-arc/aets/DCM4CHEE/rs/studies/${
+  //           study['0020000D'].Value[0]
+  //         }/reject/113039^DCM`,
+  //         {
+  //           method: 'POST',
+  //         },
+  //       );
+  //     });
 
-      await Promise.all(promises);
-      console.log('Deleted', promises.length, 'studies');
+  //     await Promise.all(promises);
+  //     console.log('Deleted', promises.length, 'studies');
 
-      setTimeout(deleteStudies, 1000);
-    };
+  //     setTimeout(deleteStudies, 1000);
+  //   };
 
-    deleteStudies();
-  }, 30000);
+  //   deleteStudies();
+  // }, 30000);
 
   it('should have correct constructor name', function() {
     expect(dwc.constructor.name).toEqual('DICOMwebClient');
